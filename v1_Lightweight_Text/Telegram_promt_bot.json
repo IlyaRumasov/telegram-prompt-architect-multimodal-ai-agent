@@ -1,0 +1,964 @@
+{
+  "name": "Telegram_promt_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Цей воркфлоу реалізує AI-керованого Telegram-бота (Prompt Architect), який працює як прошарок між користувачем та мовними моделями.\n\nАрхітектура побудована за принципом Event-Driven: тригер ловить вебхуки з Telegram, а роутер розбиває їх на команди (/start, /help, /donate), сервісні запити (фідбек, співпраця) або безпосередні звернення до ШІ. Якщо користувач надсилає голосове повідомлення, система автоматично завантажує його і транскрибує через Whisper. Далі підключається AI-агент з короткостроковою пам'яттю (Memory Buffer), який через OpenRouter генерує ідеальне технічне завдання (мета-промт) за заданим шаблоном. Також система паралельно логує всі запити у внутрішню базу даних (Data Table) та надсилає сповіщення адміністратору при певних тригерах.",
+        "height": 192,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        912
+      ],
+      "typeVersion": 1,
+      "id": "bed4e9a2-c74c-4dcd-81cb-f9221565a41f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -896,
+        736
+      ],
+      "id": "546b9599-f9dd-488b-be53-6b2e0dd11921",
+      "name": "[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f20ec082-7a37-4197-af0c-cf59072dbfd3",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Ілля",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ed6b9226-78b9-4632-84a5-34882e52bb39",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "ІЛЛЯ",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "fceb4461-dd6f-4379-a571-44958b9c0e0e",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Илья",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d250dae0-6050-44c5-b853-c7f9fd7d3413",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "ИЛЬЯ",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8b969bfc-3753-40bb-9296-c434c4079da5",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "support_question",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2243f96c-b5ca-43eb-9ce6-14177fdd55c8",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "support_order",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "85fdb9db-d5c2-4216-ac29-57eae77a11c0"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5b57da3b-9a6e-488d-a63b-3d78f49c41ef",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4b38d324-177d-4829-afbd-a17027ffb66c",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/donate",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d6b8712d-304c-4870-ad55-4110265fed4f",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "^(?!\\/(start\nhelp\ndonate)$).*$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -672,
+        608
+      ],
+      "id": "aaf757c1-414b-4fc8-9a0e-1843547e0421",
+      "name": "Route: Dispatch Command Flow / Route: Диспетчер потоків команд"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1793236b-1618-48c9-b997-d9d88f252cc4",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -448,
+        1216
+      ],
+      "id": "8c9cae3a-8d7a-4ebf-8f89-79b1d063186b",
+      "name": "Check: Is Media Voice? / Перевірка: Чи є медіа голосом?"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        1296
+      ],
+      "id": "0f21482e-e1bd-41b8-abe8-687c87e26437",
+      "name": "[TG] Fetch Voice Asset / [TG] Завантаження голосового активу",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        0,
+        1296
+      ],
+      "id": "2ebfde63-e4b5-49c9-94ec-94fe519d0e9c",
+      "name": "[STT] Transcribe Voice Media / [STT] Транскрибація голосового медіа",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "ROLE\n\nТи — PROMPT_ARCHITECT, мета-інженер. Твоя єдина робота — писати ТЕХНІЧНІ ЗАВДАННЯ (промти) для інших AI (ChatGPT, Claude, Gemini).\nТи НІКОЛИ не відповідаєш на запитання користувача прямо. Ти пишеш ідеальну інструкцію для іншого бота, як йому треба відповісти.\n\nOBJECTIVE\n\nКористувач надсилає запит (наприклад, \"Як зробити Х\").\nТи маєш створити професійний мета-промт, який користувач зможе скопіювати і вставити в інший ШІ, щоб отримати найкращий результат.\n\nCRITICAL RULES (ВАЖЛИВО!)\n\nТІЛЬКИ ТЕКСТ. Ніяких описів картинок. Ніяких JSON.\n\nБЕЗ ЗАЙВИХ ТЕГІВ. Не пиши \"text_response\", \"Prompt:\" чи інші технічні заголовки перед результатом.\n\nЧИСТИЙ ТЕКСТ. Виводь результат як чистий текст (plain text). КАТЕГОРИЧНО ЗАБОРОНЕНО використовувати блоки коду Markdown (символи ```). Твій текст і так буде автоматично оформлений на моїй стороні.\n\nВКАЗІВКИ, А НЕ ВІДПОВІДЬ. Не пиши кінцевий контент (не пиши сам рецепт чи сам код). Пиши вказівки для іншого ШІ: \"Напиши рецепт...\", \"Створи код...\".\n\nMETHODOLOGY (Структура твого виводу)\n\nВикористовуй таку чітку структуру для кожного промту:\n\nPersona: Роль, яку має прийняти AI (наприклад, \"Ти досвідчений Python-розробник\").\n\nContext: Вхідні дані та нюанси запиту.\n\nTask: Детальний опис того, що AI має зробити.\n\nConstraints: Обмеження (тон, стиль, довжина, мова).\n\nFormat: Як саме оформити результат (Markdown, таблиця, список).\n\nEXAMPLE\n\nInput: \"Як замінити колесо?\"\nOutput:\nPersona: Ти досвідчений автомеханік, який вміє пояснювати складні речі новачкам.\nContext: Користувач знаходиться на дорозі, у нього пробите колесо і він має стандартний набір інструментів.\nTask: Напиши покроковий алгоритм заміни колеса. Обов'язково почни з правил безпеки (аварійка, жилет). Поясни, як правильно використовувати домкрат.\nConstraints: Тон спокійний та інструктивний. Мова проста, без складного сленгу.\nFormat: Нумерований список з виділенням ключових дій жирним шрифтом."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        1216
+      ],
+      "id": "0ee24ec5-e7a7-4d86-aa7b-e392bb016bc0",
+      "name": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів"
+    },
+    {
+      "parameters": {
+        "model": "openai/o4-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        240,
+        1440
+      ],
+      "id": "7fcb9350-cb1c-45c1-b802-3ba9da27f045",
+      "name": "[API] Init OpenRouter Model / [API] Ініціалізація моделі OpenRouter",
+      "credentials": {
+        "openRouterApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.chat.id }}_text_v1",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        1440
+      ],
+      "id": "2e9011b2-80d3-487d-bb37-7fd48e6630b8",
+      "name": "[Mem] Load Context Buffer / [Mem] Завантаження буфера контексту"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.chat.id }}",
+        "text": "=Привіт, {{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.from.first_name }}! 👋\n\nОсь твій промт:\n\n<code>{{ $json.output }}</code>\n\n---\n🦾 <b>Тобі сподобався результат?</b>\nПідтримай проект, щоб він мав змогу існувати: /donate",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        1216
+      ],
+      "id": "e6096c2e-59f3-41dc-851f-0cfc5b60fd87",
+      "name": "[TG] Dispatch AI Response / [TG] Відправка відповіді ШІ",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "sSmWoR79r8pcpHVA",
+          "mode": "list",
+          "cachedResultName": "Telegram Bot Users Log",
+          "cachedResultUrl": "/projects/ilwTuWu3uQzxcrhM/datatables/sSmWoR79r8pcpHVA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.message.from.id }}",
+            "first_name": "={{ $json.message.from.first_name }}",
+            "text": "={{ $json.message.text }}",
+            "last_name_": "={{ $json.message.from.last_name }}",
+            "username": "={{ $json.message.chat.username }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_name_",
+              "displayName": "last_name_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -448,
+        1408
+      ],
+      "id": "4c30e802-b88c-4c54-9502-ac67df068f7c",
+      "name": "[DB] Append Audit Record / [DB] Додавання запису аудиту"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=Привіт, <b>{{ $json.message.from.first_name }}</b>! 👋\n\nЯ — <b>Prompt Architect</b>. Моя місія — перетворити твої ідеї на професійні запити для ШІ.\n\n<b>Що я роблю:</b>\nЯ готую ідеальну інструкцію для <b>ChatGPT, Claude чи Gemini</b>, щоб вони видали тобі результат на 200%.\n\n<b>Як користуватися:</b>\n👇 Просто напиши свою ідею або надішли <b>\"голосовуху\"</b>.\n\n---\n🛠 <b>Про проект:</b>\nЯ розробляю цього бота сам, «на колінці», щоб він залишався безкоштовним і корисним. Оренда серверів та мізки ШІ коштують грошей, тому якщо бот тобі допоможе — буду вдячний за підтримку ☕️ (детальніше: /donate). Але це виключно за твоїм бажанням!\n\nСпробуй щось написати прямо зараз! 🚀",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "💳 Закинути на підтримку",
+                    "additionalFields": {
+                      "url": "https://send.monobank.ua/jar/AbpdPUBdSt"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🙋‍♂️ Маю питання",
+                    "additionalFields": {
+                      "callback_data": "support_question"
+                    }
+                  },
+                  {
+                    "text": "Співпраця та ідеї 💡",
+                    "additionalFields": {
+                      "callback_data": "support_order"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        64
+      ],
+      "id": "3407f82d-59b9-40a5-8962-fecbd1e58763",
+      "name": "[TG] Dispatch Welcome Message / [TG] Відправка повідомлення привітання",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_ADMIN_CHAT_ID",
+        "text": "=📩 <b>Новий запит у боті!</b>\n<b>Від:</b> @{{ $json.message.from.username || 'Анонім' }} (ID: <code>{{ $json.message.from.id }}</code>)\n<b>Текст:</b> {{ $json.message.text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        256
+      ],
+      "id": "c34bbd04-4fe3-4103-af7a-4dd7c9a71e7e",
+      "name": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.callback_query.message.chat.id }}",
+        "text": "👋 <b>Привіт! Я — Ілля, автор цього бота.</b>\n\nЦей проєкт я створив власними силами на чистому ентузіазмі, бо обожнюю автоматизацію та ШІ. Зараз я шукаю нові виклики та цікаві задачі, де мої вміння можуть стати у пригоді. \n\n⚙️ Якщо ти шукаєш розробника в команду, маєш ідею для спільного проєкту або хочеш автоматизувати щось у себе — <b>я відкритий до пропозицій!</b>\n\n✉️ Напиши свою ідею чи запитання наступним повідомленням.\n\n⚠️ <b>Тільки почни текст із мого імені — Ілля</b> (наприклад: <code>Ілля, є пропозиція...</code>). Твій запит прилетить мені в особисті, і ми поспілкуємось!",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        448
+      ],
+      "id": "ebd78b18-bef2-435c-8bee-6d9da192f5c7",
+      "name": "[TG] Dispatch Partnership Pitch / [TG] Відправка пропозиції співпраці",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.callback_query.message.chat.id }}",
+        "text": "💬 Є запитання чи порада по боту?\n\nНапиши все одним повідомленням. Я (Ілля) анонімно отримаю твій текст і постараюсь допомогти або врахувати твою ідею.\n\n⚠️ Важливо: почни текст із мого імені — Ілля (наприклад: Ілля, підкажи...).",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        640
+      ],
+      "id": "a7a2ccc5-92dd-49aa-9338-e2f206dd779f",
+      "name": "[TG] Request User Feedback / [TG] Запит зворотного зв'язку",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=☕️ <b>Підтримати проєкт</b>\n\nПривіт! 👋 Я розробляю <b>Prompt Architect</b> сам, буквально «на колінці» у вільний час. Мені приємно, що бот допомагає вам отримувати круті результати від ШІ.\n\nАле є нюанс: оренда сервера та оплата токенів для нейромережі коштують реальних грошей. Кожен ваш запит — це маленька витрата для мене.\n\nЯкщо бот зекономив вам час або допоміг заробити — підтримайте проєкт гривнею. Будь-яка сума (навіть вартість однієї кави ☕️) допоможе боту залишатися онлайн і ставати кращим.\n\n<b>Оберіть зручний спосіб підтримки:</b> 👇",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "💳 Monobank",
+                    "additionalFields": {
+                      "url": "https://send.monobank.ua/jar/AbpdPUBdSt"
+                    }
+                  },
+                  {
+                    "text": "💳 Privatbank",
+                    "additionalFields": {
+                      "url": "https://www.privat24.ua/send/j2g68"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🙋‍♂️ Маю питання",
+                    "additionalFields": {
+                      "callback_data": "support_question"
+                    }
+                  },
+                  {
+                    "text": "Співпраця та ідеї 💡",
+                    "additionalFields": {
+                      "callback_data": "support_order"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        832
+      ],
+      "id": "6b8537e2-a060-4f14-9d7d-ef325cb95813",
+      "name": "[TG] Dispatch Billing Info / [TG] Відправка платіжних реквізитів",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=Привіт, <b>{{ $json.message.from.first_name }}</b>! 👋\n\nЯ — <b>Prompt Architect</b>. Моя місія — перетворити твої сирі ідеї на професійні запити для ШІ.\n\n<b>Що я роблю:</b>\nЯ не відповідаю на запитання напряму. Замість цього я готую ідеальне технічне завдання для <b>ChatGPT, Claude чи Gemini</b>, щоб вони видали тобі результат на 200%.\n\n<b>Як користуватися:</b>\n👇 Просто напиши мені свою ідею або надішли <b>\"голосовуху\"</b>.\n\nНаприклад: <i>\"напиши пост про каву\"</i> або <i>\"зроби промт для картинки кота-кіборга\"</i>.\n\nСпробуй прямо зараз! 🚀",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🙋‍♂️ Маю питання",
+                    "additionalFields": {
+                      "callback_data": "support_question"
+                    }
+                  },
+                  {
+                    "text": "Співпраця та ідеї 💡",
+                    "additionalFields": {
+                      "callback_data": "support_order"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        1024
+      ],
+      "id": "780761d2-58f9-416e-89e1-1c49752510e9",
+      "name": "[TG] Dispatch Help Info / [TG] Відправка інформації допомоги",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення": {
+      "main": [
+        [
+          {
+            "node": "Route: Dispatch Command Flow / Route: Диспетчер потоків команд",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Dispatch Command Flow / Route: Диспетчер потоків команд": {
+      "main": [
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Request User Feedback / [TG] Запит зворотного зв'язку",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Partnership Pitch / [TG] Відправка пропозиції співпраці",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Welcome Message / [TG] Відправка повідомлення привітання",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Help Info / [TG] Відправка інформації допомоги",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Billing Info / [TG] Відправка платіжних реквізитів",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check: Is Media Voice? / Перевірка: Чи є медіа голосом?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check: Is Media Voice? / Перевірка: Чи є медіа голосом?": {
+      "main": [
+        [
+          {
+            "node": "[TG] Fetch Voice Asset / [TG] Завантаження голосового активу",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[TG] Fetch Voice Asset / [TG] Завантаження голосового активу": {
+      "main": [
+        [
+          {
+            "node": "[STT] Transcribe Voice Media / [STT] Транскрибація голосового медіа",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[STT] Transcribe Voice Media / [STT] Транскрибація голосового медіа": {
+      "main": [
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів": {
+      "main": [
+        [
+          {
+            "node": "[TG] Dispatch AI Response / [TG] Відправка відповіді ШІ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[API] Init OpenRouter Model / [API] Ініціалізація моделі OpenRouter": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[Mem] Load Context Buffer / [Mem] Завантаження буфера контексту": {
+      "ai_memory": [
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3605a64d-8dff-4588-844b-3ef910a321b9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  },
+  "id": "KBql1r0qyrmIV60i12X-j",
+  "tags": []
+}

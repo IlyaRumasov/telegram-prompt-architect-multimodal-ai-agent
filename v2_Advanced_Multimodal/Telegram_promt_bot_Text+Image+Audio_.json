@@ -1,0 +1,1245 @@
+{
+  "name": "Telegram_promt_bot(Text+Image+Audio)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        672
+      ],
+      "id": "c87be81c-08f9-48e5-b739-873ff3fcde7b",
+      "name": "[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f20ec082-7a37-4197-af0c-cf59072dbfd3",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Ілля",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ed6b9226-78b9-4632-84a5-34882e52bb39",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "ІЛЛЯ",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "fceb4461-dd6f-4379-a571-44958b9c0e0e",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Илья",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d250dae0-6050-44c5-b853-c7f9fd7d3413",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "ИЛЬЯ",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8b969bfc-3753-40bb-9296-c434c4079da5",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "support_question",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2243f96c-b5ca-43eb-9ce6-14177fdd55c8",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "support_order",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "85fdb9db-d5c2-4216-ac29-57eae77a11c0"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5b57da3b-9a6e-488d-a63b-3d78f49c41ef",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4b38d324-177d-4829-afbd-a17027ffb66c",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/donate",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d6b8712d-304c-4870-ad55-4110265fed4f",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "^(?!\\/(start\nhelp\ndonate)$).*$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        544
+      ],
+      "id": "df00b0e6-a281-4e69-ae95-7480b09116ab",
+      "name": "Route: Dispatch Command Flow / Route: Диспетчер потоків команд"
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_ADMIN_CHAT_ID",
+        "text": "=📩 <b>Новий запит у боті!</b>\n<b>Від:</b> @{{ $json.message.from.username || 'Анонім' }} (ID: <code>{{ $json.message.from.id }}</code>)\n<b>Текст:</b> {{ $json.message.text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        0
+      ],
+      "id": "26098a78-2769-45f3-b9f0-beaa8088785b",
+      "name": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.callback_query.message.chat.id }}",
+        "text": "👋 <b>Привіт! Я — Ілля, автор цього бота.</b>\n\nЦей проєкт я створив власними силами на чистому ентузіазмі, бо обожнюю автоматизацію та ШІ. Зараз я шукаю нові виклики та цікаві задачі, де мої вміння можуть стати у пригоді. \n\n⚙️ Якщо ти шукаєш розробника в команду, маєш ідею для спільного проєкту або хочеш автоматизувати щось у себе — <b>я відкритий до пропозицій!</b>\n\n✉️ Напиши свою ідею чи запитання наступним повідомленням.\n\n⚠️ <b>Тільки почни текст із мого імені — Ілля</b> (наприклад: <code>Ілля, є пропозиція...</code>). Твій запит прилетить мені в особисті, і ми поспілкуємось!",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        192
+      ],
+      "id": "317e4422-8d3b-4f6d-a26e-299d5e96fad1",
+      "name": "[TG] Dispatch Partnership Pitch / [TG] Відправка пропозиції співпраці",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.callback_query.message.chat.id }}",
+        "text": "💬 Є запитання чи порада по боту?\n\nНапиши все одним повідомленням. Я (Ілля) анонімно отримаю твій текст і постараюсь допомогти або врахувати твою ідею.\n\n⚠️ Важливо: почни текст із мого імені — Ілля (наприклад: Ілля, підкажи...).",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        384
+      ],
+      "id": "c825e4cf-b950-47fb-81a3-537cd9c6a279",
+      "name": "Ask for details ➔ [TG] Request User Feedback / [TG] Запит зворотного зв'язку",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=Привіт, <b>{{ $json.message.from.first_name }}</b>! 👋\n\nЯ — <b>Prompt Architect</b>. Моя місія — перетворити твої ідеї на професійні запити для ШІ.\n\n<b>Що я роблю:</b>\nЯ готую ідеальну інструкцію для <b>ChatGPT, Claude чи Gemini</b>, щоб вони видали тобі результат на 200%.\n\n<b>Як користуватися:</b>\n👇 Просто напиши свою ідею або надішли <b>\"голосовуху\"</b>.\n\n---\n🛠 <b>Про проект:</b>\nЯ розробляю цього бота сам, «на колінці», щоб він залишався безкоштовним і корисним. Оренда серверів та мізки ШІ коштують грошей, тому якщо бот тобі допоможе — буду вдячний за підтримку ☕️ (детальніше: /donate). Але це виключно за твоїм бажанням!\n\nСпробуй щось написати прямо зараз! 🚀",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "💳 Закинути на підтримку",
+                    "additionalFields": {
+                      "url": "https://send.monobank.ua/jar/AbpdPUBdSt"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🙋‍♂️ Маю питання",
+                    "additionalFields": {
+                      "callback_data": "support_question"
+                    }
+                  },
+                  {
+                    "text": "Співпраця та ідеї 💡",
+                    "additionalFields": {
+                      "callback_data": "support_order"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        576
+      ],
+      "id": "4e80e218-d1e7-461b-ba0f-b30de5258c43",
+      "name": "[TG] Dispatch Welcome Message / [TG] Відправка повідомлення привітання",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=☕️ <b>Підтримати проєкт</b>\n\nПривіт! 👋 Я розробляю <b>Prompt Architect</b> сам, буквально «на колінці» у вільний час. Мені приємно, що бот допомагає вам отримувати круті результати від ШІ.\n\nАле є нюанс: оренда сервера та оплата токенів для нейромережі коштують реальних грошей. Кожен ваш запит — це маленька витрата для мене.\n\nЯкщо бот зекономив вам час або допоміг заробити — підтримайте проєкт гривнею. Будь-яка сума (навіть вартість однієї кави ☕️) допоможе боту залишатися онлайн і ставати кращим.\n\n<b>Оберіть зручний спосіб підтримки:</b> 👇",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "💳 Monobank",
+                    "additionalFields": {
+                      "url": "https://send.monobank.ua/jar/AbpdPUBdSt"
+                    }
+                  },
+                  {
+                    "text": "💳 Privatbank",
+                    "additionalFields": {
+                      "url": "https://www.privat24.ua/send/j2g68"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🙋‍♂️ Маю питання",
+                    "additionalFields": {
+                      "callback_data": "support_question"
+                    }
+                  },
+                  {
+                    "text": "Співпраця та ідеї 💡",
+                    "additionalFields": {
+                      "callback_data": "support_order"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        768
+      ],
+      "id": "f82037d8-121c-4b62-92c0-c272f9d552cd",
+      "name": "[TG] Dispatch Billing Info / [TG] Відправка платіжних реквізитів",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1793236b-1618-48c9-b997-d9d88f252cc4",
+              "leftValue": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.text }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        16,
+        1152
+      ],
+      "id": "34ad03bd-91c9-43f8-a76f-8d5bef4b1a4b",
+      "name": "Check: Is Media Voice? / Перевірка: Чи є медіа голосом?"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=Привіт, <b>{{ $json.message.from.first_name }}</b>! 👋\n\nЯ — <b>Prompt Architect</b>. Моя місія — перетворити твої сирі ідеї на професійні запити для ШІ.\n\n<b>Що я роблю:</b>\nЯ не відповідаю на запитання напряму. Замість цього я готую ідеальне технічне завдання для <b>ChatGPT, Claude чи Gemini</b>, щоб вони видали тобі результат на 200%.\n\n<b>Як користуватися:</b>\n👇 Просто напиши мені свою ідею або надішли <b>\"голосовуху\"</b>.\n\nНаприклад: <i>\"напиши пост про каву\"</i> або <i>\"зроби промт для картинки кота-кіборга\"</i>.\n\nСпробуй прямо зараз! 🚀",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🙋‍♂️ Маю питання",
+                    "additionalFields": {
+                      "callback_data": "support_question"
+                    }
+                  },
+                  {
+                    "text": "Співпраця та ідеї 💡",
+                    "additionalFields": {
+                      "callback_data": "support_order"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        960
+      ],
+      "id": "9201ce76-79c3-423f-8629-33901367812a",
+      "name": "[TG] Dispatch Help Info / [TG] Відправка інформації допомоги",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "sSmWoR79r8pcpHVA",
+          "mode": "list",
+          "cachedResultName": "Telegram Bot Users Log",
+          "cachedResultUrl": "/projects/ilwTuWu3uQzxcrhM/datatables/sSmWoR79r8pcpHVA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.message.from.id }}",
+            "first_name": "={{ $json.message.from.first_name }}",
+            "text": "={{ $json.message.text }}",
+            "last_name_": "={{ $json.message.from.last_name }}",
+            "username": "={{ $json.message.chat.username }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_name_",
+              "displayName": "last_name_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        1344
+      ],
+      "id": "be4b68bf-1bc6-4414-9a85-1d276a6924f1",
+      "name": "[DB] Append Audit Record / [DB] Додавання запису аудиту"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        1224
+      ],
+      "id": "de7693b7-cb88-4d77-924d-e5f6ca39f525",
+      "name": "[TG] Fetch Voice Asset / [TG] Завантаження голосового активу",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        464,
+        1224
+      ],
+      "id": "c17bd1fd-2a22-4e1a-bab4-8549236608ca",
+      "name": "[STT] Transcribe Voice Media / [STT] Транскрибація голосового медіа",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "ROLE\nТи — PROMPT_ARCHITECT, мета-інженер. Твоя єдина робота — писати ТЕХНІЧНІ ЗАВДАННЯ (промти) для інших AI (ChatGPT, Claude, Gemini, Midjourney тощо).\nТи НІКОЛИ не відповідаєш на запитання користувача прямо. Ти пишеш ідеальну інструкцію для іншого бота, як йому треба виконати завдання.\n\nOBJECTIVE\nКористувач надсилає запит. Твоє завдання — створити структуру, яка змусить інший ШІ видати результат найвищої якості.\n\nCRITICAL RULES\n\nВКАЗІВКИ, А НЕ ВІДПОВІДЬ. Не пиши сам контент. Пиши накази: \"Напиши...\", \"Створи...\".\n\nJSON ONLY. Виведи відповідь СУВОРО у форматі JSON без Markdown-блоків (```).\n\nЕСТЕТИЧНЕ ФОРМАТУВАННЯ. У полі text_response розділяй кожен блок (Persona, Context тощо) подвійним переносом рядка \\n\\n. Використовуй великі літери для назв розділів.\n\nMETHODOLOGY FOR TEXT PROMPT\nСформуй text_response за цією схемою:\n\nPERSONA: Хто цей AI? (наприклад, \"Ти експерт з маркетингу\").\n\nCONTEXT: Опиши ситуацію користувача.\n\nTASK: Чіткий алгоритм дій для ШІ. Що саме він має написати?\n\nCONSTRAINTS: Тон, стиль, мова (завжди українська), заборонені теми.\n\nFORMAT: Структура виводу (списки, таблиці, заголовки).\n\nMETHODOLOGY FOR IMAGE PROMPT\nПоле image_prompt: детальний візуальний опис англійською (Style, Lighting, Composition, 4k).\n\nEXAMPLE OUTPUT (Plain Text JSON):\n{\n\"text_response\": \"PERSONA: Ти професійний шеф-кухар.\\n\\nCONTEXT: Користувач хоче навчитися готувати вдома.\\n\\nTASK: Склади покрокову інструкцію приготування страви...\\n\\nCONSTRAINTS: Тон дружній, мова українська.\\n\\nFORMAT: Маркований список.\",\n\"image_prompt\": \"A professional chef in a bright kitchen, hyper-realistic, 4k, cinematic lighting.\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        1152
+      ],
+      "id": "25efc11d-ec34-49ab-8097-8038c6495758",
+      "name": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів"
+    },
+    {
+      "parameters": {
+        "model": "openai/o4-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        696,
+        1376
+      ],
+      "id": "d97ccd25-ac70-4cb0-a0dc-4a2321d7533b",
+      "name": "[API] Init OpenRouter Model / [API] Ініціалізація моделі OpenRouter",
+      "credentials": {
+        "openRouterApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.chat.id }}_text_v1",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        824,
+        1376
+      ],
+      "id": "499870d4-dcb3-4f14-a7e2-97a9b584e1b5",
+      "name": "[Mem] Load Context Buffer / [Mem] Завантаження буфера контексту"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = items[0].json.output;\n\n// Очистка від можливих ```json та ```\nconst cleanJson = rawOutput.replace(/^```json\\s*/, '').replace(/\\s*```$/, '').trim();\n\nlet parsedData;\ntry {\n  parsedData = JSON.parse(cleanJson);\n} catch (e) {\n  // Fallback: якщо AI помилився і не видав JSON, повертаємо все як текст\n  return [{\n      json: {\n          text_response: rawOutput, // Весь текст піде користувачу\n          image_prompt: \"A generic creative image representing artificial intelligence output\" // Заглушка для картинки\n      }\n  }];\n}\n\nreturn [{\n  json: {\n    text_response: parsedData.text_response,\n    image_prompt: parsedData.image_prompt\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        1152
+      ],
+      "id": "93ae84ae-84e3-4ab5-9025-2045fd818595",
+      "name": "Parse: Extract LLM JSON / Парсер: Витягнення JSON від LLM"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openRouterApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  {\n    \"model\": \"black-forest-labs/flux.2-klein-4b\",\n    \"messages\": [\n      {\n        \"role\": \"user\",\n        \"content\": $('Parse: Extract LLM JSON / Парсер: Витягнення JSON від LLM').item.json.image_prompt\n      }\n    ]\n  }\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1264,
+        1056
+      ],
+      "id": "dfda5fe8-73f0-4649-8501-99b40f12b1e9",
+      "name": "[API] Generate Image Asset / [API] Генерація зображення",
+      "credentials": {
+        "openRouterApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = items[0].json.choices[0].message;\n\n// Функція, щоб безпечно дістати посилання з різних місць\nfunction getImageUrl(msg) {\n  // 1. Перевіряємо масив images (новий формат OpenRouter)\n  if (msg.images && msg.images.length > 0) {\n    const img = msg.images[0];\n    if (img.url) return img.url;                  // Варіант А\n    if (img.image_url && img.image_url.url) return img.image_url.url; // Варіант Б\n  }\n  // 2. Перевіряємо текст повідомлення (старий формат)\n  if (msg.content) {\n    const match = msg.content.match(/https?:\\/\\/[^\\s\\)]+/);\n    if (match) return match[0];\n  }\n  return null;\n}\n\nconst finalUrl = getImageUrl(message);\n\nif (finalUrl) {\n  // Якщо це Base64 код (картинка вже тут)\n  if (finalUrl.startsWith('data:')) {\n    const base64Data = finalUrl.split(',')[1];\n    return [{\n      json: { mode: \"binary\" },\n      binary: {\n        // 👇 УВАГА: Тут ми змінили 'data' на 'image_data'\n        image_data: {\n          data: base64Data,\n          mimeType: 'image/png',\n          fileName: 'generated_image.png'\n        }\n      }\n    }];\n  } \n  // Якщо це звичайне посилання http...\n  else {\n    return [{\n      json: { \n        mode: \"url\",\n        url: finalUrl \n      }\n    }];\n  }\n} else {\n  // Якщо нічого не знайшли\n  return [{ json: { error: \"Картинку не знайдено\", raw: message } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        1056
+      ],
+      "id": "9c5bcfcd-123b-473f-b293-1645e9ecd3e8",
+      "name": "Script: Parse Image Buffer / Скрипт: Парсинг буфера зображення"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "28028262-b325-4005-858d-340427d45acf",
+              "leftValue": "={{ $json.mode }}",
+              "rightValue": "url",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1712,
+        1056
+      ],
+      "id": "9caf9571-912c-40a0-aca6-9ca08a39b672",
+      "name": "Validate: Is Image Base64? / Валідація: Чи є зображення кодом Base64?"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.text_response }}",
+        "voice": "onyx",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1712,
+        1248
+      ],
+      "id": "dcfdb0ac-55d1-4eca-8945-b2a5875c8f85",
+      "name": "[TTS] Generate Audio Media / [TTS] Генерація аудіо медіа",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1936,
+        1152
+      ],
+      "id": "001e2667-a22c-4c61-a934-17a414ad912c",
+      "name": "Merge: Sync Media Streams / Об'єднання: Синхронізація медіа-потоків"
+    },
+    {
+      "parameters": {
+        "jsCode": "const mergedItem = items[0];\n\n// 1. Текст\nconst text = $('Parse: Extract LLM JSON / Парсер: Витягнення JSON від LLM').first().json.text_response;\n\n// 2. Картинка (ми її назвали image_data раніше)\nconst imgBinary = mergedItem.binary ? mergedItem.binary.image_data : null;\n\n// 3. Аудіо (OpenAI видає його як 'data', тому беремо 'data')\nconst audioBinary = mergedItem.binary ? mergedItem.binary.data : null;\n\nreturn [{\n  json: {\n    final_text: text\n  },\n  binary: {\n    // Формуємо красивий пакет для відправки\n    image_data: imgBinary,\n    audio_data: audioBinary  // Перейменовуємо на ходу\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        1152
+      ],
+      "id": "7709cb42-e52c-4d47-bc65-bd089102f556",
+      "name": "Transform: Prepare Output Payload / Трансформація: Підготовка вихідного пакету"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.chat.id }}",
+        "text": "=Привіт, <b>{{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.from.first_name }}</b>! 👋\n\nОсь твій промт:\n\n<code>{{ $('Parse: Extract LLM JSON / Парсер: Витягнення JSON від LLM').item.json.text_response }}</code>\n\n---\n🦾 Тобі сподобався результат?\nПідтримай проект, щоб він мав змогу існувати: /donate",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2384,
+        960
+      ],
+      "id": "95024073-261c-4a8c-baba-8833597ebf5b",
+      "name": "[TG] Dispatch Text Response / [TG] Відправка текстової відповіді",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.chat.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "image_data",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2384,
+        1152
+      ],
+      "id": "166fdbaa-a19b-4b01-991e-f3ca9ebc4755",
+      "name": "[TG] Dispatch Image Asset / [TG] Відправка зображення",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення').item.json.message.chat.id }}",
+        "binaryData": "={{ true }}",
+        "binaryPropertyName": "audio_data",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2384,
+        1344
+      ],
+      "id": "55fc556c-1fb4-4591-8f72-76dfbb242144",
+      "name": "[TG] Dispatch Audio Asset / [TG] Відправка аудіо медіа",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Generic_API_Connection"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "🎨 Telegram Prompt Architect (Multimodal)\nМультимодальний AI-бот (Текст + Зображення + Аудіо)\n\nТригер: Вхідне повідомлення у Telegram (текст або голос).\n\nЛогіка: Транскрибує голос (Whisper) ➔ ШІ формує JSON-структуру ➔ Розгалужує потік на паралельну генерацію медіа.\n\nІнтелект: OpenRouter (створює промти), Flux API (генерує картинку), OpenAI TTS (озвучує текст).\n\nРезультат: Синхронізує всі потоки та відправляє користувачу 3 повідомлення: текст, зображення та аудіо. Логує запит у БД.\n\nМета: Перетворення сирих ідей користувача на готовий професійний контент одразу в трьох форматах.",
+        "height": 240,
+        "width": 1232
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        752
+      ],
+      "typeVersion": 1,
+      "id": "c2bce809-bd0c-4742-8d93-6b330a53d79e",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "[TG] Receive Inbound Message / [TG] Отримання вхідного повідомлення": {
+      "main": [
+        [
+          {
+            "node": "Route: Dispatch Command Flow / Route: Диспетчер потоків команд",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Dispatch Command Flow / Route: Диспетчер потоків команд": {
+      "main": [
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Admin Alert / [TG] Відправка адмін-сповіщення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ask for details ➔ [TG] Request User Feedback / [TG] Запит зворотного зв'язку",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Partnership Pitch / [TG] Відправка пропозиції співпраці",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Welcome Message / [TG] Відправка повідомлення привітання",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Help Info / [TG] Відправка інформації допомоги",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[TG] Dispatch Billing Info / [TG] Відправка платіжних реквізитів",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[DB] Append Audit Record / [DB] Додавання запису аудиту",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check: Is Media Voice? / Перевірка: Чи є медіа голосом?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check: Is Media Voice? / Перевірка: Чи є медіа голосом?": {
+      "main": [
+        [
+          {
+            "node": "[TG] Fetch Voice Asset / [TG] Завантаження голосового активу",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[TG] Fetch Voice Asset / [TG] Завантаження голосового активу": {
+      "main": [
+        [
+          {
+            "node": "[STT] Transcribe Voice Media / [STT] Транскрибація голосового медіа",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[STT] Transcribe Voice Media / [STT] Транскрибація голосового медіа": {
+      "main": [
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів": {
+      "main": [
+        [
+          {
+            "node": "Parse: Extract LLM JSON / Парсер: Витягнення JSON від LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[API] Init OpenRouter Model / [API] Ініціалізація моделі OpenRouter": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[Mem] Load Context Buffer / [Mem] Завантаження буфера контексту": {
+      "ai_memory": [
+        [
+          {
+            "node": "[AI] Orchestrate Prompt Agent / [AI] Оркестрація агента промтів",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse: Extract LLM JSON / Парсер: Витягнення JSON від LLM": {
+      "main": [
+        [
+          {
+            "node": "[API] Generate Image Asset / [API] Генерація зображення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[TTS] Generate Audio Media / [TTS] Генерація аудіо медіа",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[API] Generate Image Asset / [API] Генерація зображення": {
+      "main": [
+        [
+          {
+            "node": "Script: Parse Image Buffer / Скрипт: Парсинг буфера зображення",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script: Parse Image Buffer / Скрипт: Парсинг буфера зображення": {
+      "main": [
+        [
+          {
+            "node": "Validate: Is Image Base64? / Валідація: Чи є зображення кодом Base64?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate: Is Image Base64? / Валідація: Чи є зображення кодом Base64?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Merge: Sync Media Streams / Об'єднання: Синхронізація медіа-потоків",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[TTS] Generate Audio Media / [TTS] Генерація аудіо медіа": {
+      "main": [
+        [
+          {
+            "node": "Merge: Sync Media Streams / Об'єднання: Синхронізація медіа-потоків",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge: Sync Media Streams / Об'єднання: Синхронізація медіа-потоків": {
+      "main": [
+        [
+          {
+            "node": "Transform: Prepare Output Payload / Трансформація: Підготовка вихідного пакету",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform: Prepare Output Payload / Трансформація: Підготовка вихідного пакету": {
+      "main": [
+        [
+          {
+            "node": "[TG] Dispatch Text Response / [TG] Відправка текстової відповіді",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[TG] Dispatch Image Asset / [TG] Відправка зображення",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[TG] Dispatch Audio Asset / [TG] Відправка аудіо медіа",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8f550f18-f699-4607-8645-2390c9884869",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  },
+  "id": "LxVzqwkWF10XRyu7",
+  "tags": []
+}
