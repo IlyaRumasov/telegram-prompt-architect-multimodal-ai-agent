@@ -93,6 +93,17 @@ flowchart TD
 
 <img src="docs/06-bot-chat.jpg" alt="Бот у Telegram" width="360">
 
+**Приклад: один запит, різні результати.** Запит «Хочу, щоб ШІ допоміг мені підготуватися до співбесіди на позицію менеджера проєктів». Спочатку бот питає, під яку модель готувати промт, і продовжує одразу після вибору. Промт під Claude оформлений XML-тегами, інакші цілі дають розділи PERSONA / CONTEXT / TASK / CONSTRAINTS / FORMAT / QUALITY CHECK. У режимі «картинка» бот пише промт для генератора зображень.
+
+<p>
+<img src="docs/07-choose-target-model.png" alt="Вибір цільової моделі" width="320">
+<img src="docs/08-prompt-for-claude-xml.png" alt="Промт під Claude в XML-тегах" width="320">
+</p>
+<p>
+<img src="docs/09-prompt-structured-sections.png" alt="Промт зі структурою PERSONA / CONTEXT / TASK" width="320">
+<img src="docs/10-image-mode-prompt.png" alt="Режим картинки: промт для Midjourney/DALL·E/Flux" width="320">
+</p>
+
 ## Файли
 
 | Файл | Призначення |
