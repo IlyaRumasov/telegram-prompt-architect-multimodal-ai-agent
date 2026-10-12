@@ -1,0 +1,2095 @@
+[
+ {
+  "name": "start: привітання",
+  "update": {
+   "update_id": 1,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/start"
+   }
+  },
+  "expect": [
+   "Apply Limits And Settings",
+   "Is Duplicate Update?",
+   "Save User Prefs",
+   "Within Rate Limit?",
+   "Route Update",
+   "Send Welcome"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Send Help"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "help з @ботом",
+  "update": {
+   "update_id": 2,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/help@MyBot"
+   }
+  },
+  "expect": [
+   "Send Help"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "невідома команда -> help",
+  "update": {
+   "update_id": 3,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/foo"
+   }
+  },
+  "expect": [
+   "Send Help"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Show Typing"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "donate",
+  "update": {
+   "update_id": 4,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/donate"
+   }
+  },
+  "expect": [
+   "Send Donate Info"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "кнопка: співпраця",
+  "update": {
+   "update_id": 5,
+   "callback_query": {
+    "id": "cb1",
+    "data": "support_order",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Send Partnership Pitch"
+  ],
+  "not_expect": [
+   "Send Question Prompt",
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "кнопка: запитання",
+  "update": {
+   "update_id": 6,
+   "callback_query": {
+    "id": "cb1",
+    "data": "support_question",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Send Question Prompt"
+  ],
+  "not_expect": [
+   "Send Partnership Pitch"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/image вимикає картинки",
+  "update": {
+   "update_id": 7,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/image"
+   }
+  },
+  "expect": [
+   "Save User Prefs",
+   "Confirm Setting Change"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.image": false,
+    "reply": "~Картинки: вимкнено"
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/audio вмикає озвучку (за замовчуванням вимкнена)",
+  "update": {
+   "update_id": 8,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/audio"
+   }
+  },
+  "expect": [
+   "Confirm Setting Change"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.audio": true,
+    "reply": "~Аудіо: увімкнено"
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/image повертає картинки",
+  "update": {
+   "update_id": 9,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/image"
+   }
+  },
+  "expect": [
+   "Confirm Setting Change"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "image": false,
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.image": true
+   }
+  }
+ },
+ {
+  "name": "кнопка режиму: код",
+  "update": {
+   "update_id": 10,
+   "callback_query": {
+    "id": "cb1",
+    "data": "mode:code",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Confirm Setting Change",
+   "Save User Prefs"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.mode": "code",
+    "reply": "~Режим"
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "кнопка мови: English",
+  "update": {
+   "update_id": 11,
+   "callback_query": {
+    "id": "cb1",
+    "data": "lang:en",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Confirm Setting Change"
+  ],
+  "not_expect": [],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.lang": "en"
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "невідомий режим ігнорується",
+  "update": {
+   "update_id": 12,
+   "callback_query": {
+    "id": "cb1",
+    "data": "mode:bad",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Confirm Setting Change"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "email",
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.mode": "email"
+   }
+  }
+ },
+ {
+  "name": "/mode показує кнопки",
+  "update": {
+   "update_id": 13,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/mode"
+   }
+  },
+  "expect": [
+   "Show Mode Menu"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/lang показує кнопки",
+  "update": {
+   "update_id": 14,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/lang"
+   }
+  },
+  "expect": [
+   "Show Language Menu"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "текстовий запит: текст з кнопками, картинка, без аудіо",
+  "update": {
+   "update_id": 15,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Te<st",
+     "username": "tester"
+    },
+    "text": "зроби промт про каву"
+   }
+  },
+  "expect": [
+   "Apply Limits And Settings",
+   "Is Duplicate Update?",
+   "Save User Prefs",
+   "Within Rate Limit?",
+   "Route Update",
+   "Show Typing",
+   "Is Voice Message?",
+   "Set Prompt From Text",
+   "Has Prompt Text?",
+   "Is User Request?",
+   "Save Request History",
+   "Generate Prompt (Agent)",
+   "Parse Agent Output",
+   "Log Prompt Result",
+   "Split And Escape Text",
+   "Is Last Chunk?",
+   "Send Prompt With Buttons",
+   "Image Enabled?",
+   "Generate Image (Gemini)",
+   "Image Generated?",
+   "Send Photo",
+   "Has Image Description?",
+   "Save Image Description",
+   "Audio Enabled?"
+  ],
+  "not_expect": [
+   "Generate Speech (Gemini TTS)",
+   "Send Text Chunk",
+   "Send Rate Limit Notice"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Split And Escape Text": {
+    "html": "~Te&lt;st"
+   }
+  },
+  "counts": {
+   "Split And Escape Text": 1
+  }
+ },
+ {
+  "name": "аудіо увімкнено: TTS -> WAV -> відправка",
+  "update": {
+   "update_id": 16,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Generate Speech (Gemini TTS)",
+   "Convert Speech To WAV",
+   "Speech Generated?",
+   "Send Speech File"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   },
+   "Generate Speech (Gemini TTS)": {
+    "candidates": [
+     {
+      "content": {
+       "parts": [
+        {
+         "inlineData": {
+          "mimeType": "audio/L16;codec=pcm;rate=24000",
+          "data": "AAAAAAAA"
+         }
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Load User Prefs": {
+    "audio": true,
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "картинки вимкнено: Flux не викликається",
+  "update": {
+   "update_id": 17,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Image Enabled?",
+   "Send Prompt With Buttons"
+  ],
+  "not_expect": [
+   "Generate Image (Gemini)"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "image": false,
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "голосове: Whisper -> агент",
+  "update": {
+   "update_id": 18,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "voice": {
+     "file_id": "f1"
+    }
+   }
+  },
+  "expect": [
+   "Download Voice",
+   "Transcribe Voice (Gemini)",
+   "Set Prompt From Voice",
+   "Has Prompt Text?",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Set Prompt From Text"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Transcribe Voice (Gemini)": {
+    "text": "напиши пост про каву"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Set Prompt From Voice": {
+    "prompt_text": "напиши пост про каву"
+   }
+  }
+ },
+ {
+  "name": "голосове: відповідь Gemini audioTranscription",
+  "update": {
+   "update_id": 19,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "voice": {
+     "file_id": "f1"
+    }
+   }
+  },
+  "expect": [
+   "Set Prompt From Voice",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Send Voice Error Notice"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Transcribe Voice (Gemini)": {
+    "content": {
+     "parts": [
+      {
+       "audioTranscription": {
+        "text": "Дай мені промпт на SMM-помічника."
+       }
+      }
+     ],
+     "role": "model"
+    }
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Set Prompt From Voice": {
+    "prompt_text": "Дай мені промпт на SMM-помічника."
+   }
+  }
+ },
+ {
+  "name": "голосове: порожня розшифровка",
+  "update": {
+   "update_id": 20,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "voice": {
+     "file_id": "f1"
+    }
+   }
+  },
+  "expect": [
+   "Set Prompt From Voice",
+   "Send Voice Error Notice"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Transcribe Voice (Gemini)": {
+    "text": ""
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "стікер: підказка",
+  "update": {
+   "update_id": 21,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "sticker": {
+     "file_id": "s"
+    }
+   }
+  },
+  "expect": [
+   "Send Unsupported Notice"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Show Typing"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "повідомлення автору (Ілля, ...)",
+  "update": {
+   "update_id": 22,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "Ілля, є ідея <3"
+   }
+  },
+  "expect": [
+   "Forward To Admin",
+   "Confirm Forwarded",
+   "Log Admin Message"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Show Typing"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "дублікат апдейта ігнорується",
+  "update": {
+   "update_id": 100,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Apply Limits And Settings",
+   "Is Duplicate Update?"
+  ],
+  "not_expect": [
+   "Save User Prefs",
+   "Within Rate Limit?",
+   "Route Update",
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "last_update_id": 100,
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "новіший апдейт обробляється",
+  "update": {
+   "update_id": 101,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/start"
+   }
+  },
+  "expect": [
+   "Route Update",
+   "Send Welcome"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "last_update_id": 100,
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.last_update_id": 101
+   }
+  }
+ },
+ {
+  "name": "ліміт перевищено",
+  "update": {
+   "update_id": 25,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Apply Limits And Settings",
+   "Within Rate Limit?",
+   "Send Rate Limit Notice",
+   "Log Rate Limit Hit"
+  ],
+  "not_expect": [
+   "Route Update",
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "hits": 20,
+    "window_start": "$NOW",
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "після години ліміт скидається",
+  "update": {
+   "update_id": 26,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Route Update",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Send Rate Limit Notice"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "hits": 20,
+    "window_start": 1000,
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.hits": 1
+   }
+  }
+ },
+ {
+  "name": "відповідь моделі не JSON: показуємо як є, без картинки",
+  "update": {
+   "update_id": 27,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Split And Escape Text",
+   "Send Prompt With Buttons"
+  ],
+  "not_expect": [
+   "Generate Image (Gemini)"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "just text"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Split And Escape Text": {
+    "html": "~just text"
+   }
+  }
+ },
+ {
+  "name": "модель пропустила image_prompt: запасний опис, картинка все одно є",
+  "update": {
+   "update_id": 28,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "пост про каву"
+   }
+  },
+  "expect": [
+   "Generate Image (Gemini)",
+   "Save Image Description",
+   "Send Photo"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "{\"text_response\":\"PERSONA: x\"}"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "image_prompt": "~пост про каву"
+   }
+  }
+ },
+ {
+  "name": "збій моделі: зрозуміле повідомлення без кнопок",
+  "update": {
+   "update_id": 29,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Split And Escape Text",
+   "Send Text Chunk"
+  ],
+  "not_expect": [
+   "Send Prompt With Buttons",
+   "Generate Image (Gemini)",
+   "Generate Speech (Gemini TTS)"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "error": "model down"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Split And Escape Text": {
+    "html": "~Не вдалося"
+   }
+  }
+ },
+ {
+  "name": "довга відповідь ділиться на частини",
+  "update": {
+   "update_id": 30,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Send Text Chunk",
+   "Send Prompt With Buttons"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "{\"text_response\":\"$A8000\",\"image_prompt\":\"x\"}"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "counts": {
+   "Split And Escape Text": 3
+  }
+ },
+ {
+  "name": "кнопка: переробити",
+  "update": {
+   "update_id": 31,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:redo",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Show Typing",
+   "Set Prompt From Button",
+   "Has Prompt Text?",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Set Prompt From Text"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Set Prompt From Button": {
+    "prompt_text": "~інший підхід"
+   }
+  }
+ },
+ {
+  "name": "кнопка: коротше",
+  "update": {
+   "update_id": 32,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:short",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Set Prompt From Button",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Set Prompt From Button": {
+    "prompt_text": "~коротшим"
+   }
+  }
+ },
+ {
+  "name": "кнопка: детальніше",
+  "update": {
+   "update_id": 33,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:long",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Set Prompt From Button",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Set Prompt From Button": {
+    "prompt_text": "~детальнішим"
+   }
+  }
+ },
+ {
+  "name": "кнопка: інша картинка",
+  "update": {
+   "update_id": 34,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:img",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Has Saved Image Prompt?",
+   "Use Saved Image Prompt",
+   "Generate Image (Gemini)",
+   "Image Generated?",
+   "Send Photo"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Send No Image Notice"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "last_image_prompt": "a cat",
+    "target": "auto"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   }
+  },
+  "values": {
+   "Use Saved Image Prompt": {
+    "image_prompt": "a cat"
+   }
+  }
+ },
+ {
+  "name": "кнопка: інша картинка без попереднього опису",
+  "update": {
+   "update_id": 35,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:img",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Has Saved Image Prompt?",
+   "Send No Image Notice"
+  ],
+  "not_expect": [
+   "Generate Image (Gemini)",
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/stats для адміна",
+  "update": {
+   "update_id": 36,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 999,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/stats"
+   }
+  },
+  "expect": [
+   "Is Admin User?",
+   "Load Log Rows",
+   "Build Stats Report",
+   "Send Stats Report"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load Log Rows": [
+    {
+     "event": "prompt",
+     "result": "ok",
+     "user_id": 1,
+     "mode": "code",
+     "lang": "uk",
+     "source": "text",
+     "duration_ms": 4000,
+     "is_new": true,
+     "createdAt": "$ISO_NOW"
+    },
+    {
+     "event": "prompt",
+     "result": "model_error",
+     "user_id": 2,
+     "mode": "text",
+     "lang": "en",
+     "source": "voice",
+     "duration_ms": 2000,
+     "is_new": false,
+     "createdAt": "$ISO_NOW"
+    },
+    {
+     "event": "feedback_up",
+     "user_id": 1,
+     "createdAt": "$ISO_NOW"
+    },
+    {
+     "event": "prompt",
+     "result": "ok",
+     "user_id": 1,
+     "mode": "text",
+     "createdAt": "2020-01-01T00:00:00Z"
+    }
+   ],
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Build Stats Report": {
+    "text": "~за 24 год 2"
+   }
+  }
+ },
+ {
+  "name": "/stats: помилки, оцінки та середній час",
+  "update": {
+   "update_id": 37,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 999,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/stats"
+   }
+  },
+  "expect": [
+   "Build Stats Report"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load Log Rows": [
+    {
+     "event": "prompt",
+     "result": "ok",
+     "user_id": 1,
+     "mode": "code",
+     "lang": "uk",
+     "source": "text",
+     "duration_ms": 4000,
+     "is_new": true,
+     "createdAt": "$ISO_NOW"
+    },
+    {
+     "event": "prompt",
+     "result": "model_error",
+     "user_id": 2,
+     "mode": "text",
+     "lang": "en",
+     "source": "voice",
+     "duration_ms": 2000,
+     "is_new": false,
+     "createdAt": "$ISO_NOW"
+    },
+    {
+     "event": "feedback_up",
+     "user_id": 1,
+     "createdAt": "$ISO_NOW"
+    }
+   ],
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Build Stats Report": {
+    "text": "~Помилок моделі за 24 год: 1 із 2; уточнень: 0; середній час відповіді: 3.0 с"
+   }
+  }
+ },
+ {
+  "name": "нові кнопки: оцінка 👍",
+  "update": {
+   "update_id": 38,
+   "callback_query": {
+    "id": "cb1",
+    "data": "fb:up",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Feedback",
+   "Log Feedback"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Save Request History"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/forget: видалення даних користувача",
+  "update": {
+   "update_id": 39,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/forget"
+   }
+  },
+  "expect": [
+   "Delete User History",
+   "Delete User Log",
+   "Delete User Prefs",
+   "Confirm Data Deleted"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "історія: кнопка не зберігається як запит користувача",
+  "update": {
+   "update_id": 40,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:short",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Set Prompt From Button",
+   "Is User Request?"
+  ],
+  "not_expect": [
+   "Save Request History"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "новий користувач: is_new=true",
+  "update": {
+   "update_id": 41,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/start"
+   }
+  },
+  "expect": [
+   "Send Welcome"
+  ],
+  "not_expect": [],
+  "values": {
+   "Apply Limits And Settings": {
+    "is_new": true
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "користувач із рядком у таблиці: is_new=false",
+  "update": {
+   "update_id": 42,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/start"
+   }
+  },
+  "expect": [
+   "Send Welcome"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "user_id": 7,
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "is_new": false
+   }
+  }
+ },
+ {
+  "name": "збій картинки логується, фото не шлемо",
+  "update": {
+   "update_id": 43,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Generate Image (Gemini)",
+   "Image Generated?",
+   "Log Image Error"
+  ],
+  "not_expect": [
+   "Send Photo"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Generate Image (Gemini)": {
+    "error": "x"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "збій озвучки логується",
+  "update": {
+   "update_id": 44,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Generate Speech (Gemini TTS)",
+   "Convert Speech To WAV",
+   "Speech Generated?",
+   "Log Speech Error"
+  ],
+  "not_expect": [
+   "Send Speech File"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   },
+   "Generate Speech (Gemini TTS)": {
+    "error": "x"
+   },
+   "Load User Prefs": {
+    "audio": true,
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/clarify вмикає режим уточнень",
+  "update": {
+   "update_id": 45,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/clarify"
+   }
+  },
+  "expect": [
+   "Confirm Setting Change",
+   "Save User Prefs"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.clarify": true,
+    "reply": "~Уточнення: увімкнено"
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "/target показує вибір моделі",
+  "update": {
+   "update_id": 46,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/target"
+   }
+  },
+  "expect": [
+   "Show Target Menu"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "кнопка: цільова модель Claude",
+  "update": {
+   "update_id": 47,
+   "callback_query": {
+    "id": "cb1",
+    "data": "target:claude",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Confirm Setting Change"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.target": "claude",
+    "reply": "~Claude"
+   }
+  },
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "невідома цільова модель ігнорується",
+  "update": {
+   "update_id": 48,
+   "callback_query": {
+    "id": "cb1",
+    "data": "target:bad",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Confirm Setting Change"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "gemini"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.target": "gemini"
+   }
+  }
+ },
+ {
+  "name": "агент поставив уточнювальні питання: без кнопок, без картинки",
+  "update": {
+   "update_id": 49,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "хочу план тренувань"
+   }
+  },
+  "expect": [
+   "Parse Agent Output",
+   "Split And Escape Text",
+   "Is Last Chunk?",
+   "Send Text Chunk",
+   "Log Prompt Result"
+  ],
+  "not_expect": [
+   "Send Prompt With Buttons",
+   "Generate Image (Gemini)",
+   "Generate Speech (Gemini TTS)",
+   "Save Image Description"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "{\"questions\": [\"Яка твоя мета?\", \"Скільки часу на тиждень?\"]}"
+   },
+   "Load User Prefs": {
+    "clarify": true,
+    "audio": true,
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Split And Escape Text": {
+    "html": "~Яка твоя мета?"
+   },
+   "Parse Agent Output": {
+    "is_questions": true
+   }
+  }
+ },
+ {
+  "name": "агент повернув і питання, і промт: показуємо промт",
+  "update": {
+   "update_id": 50,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Send Prompt With Buttons",
+   "Generate Image (Gemini)"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "{\"text_response\": \"PERSONA: x\", \"image_prompt\": \"cat\", \"questions\": [\"?\"]}"
+   },
+   "Generate Image (Gemini)": {
+    "_binary": "image_data"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_questions": false
+   }
+  }
+ },
+ {
+  "name": "кнопка: переоформити під Claude (одноразово, без зміни /target)",
+  "update": {
+   "update_id": 51,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:to_claude",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Show Typing",
+   "Set Prompt From Button",
+   "Has Prompt Text?",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Set Prompt From Text"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "target_override": "claude",
+    "p.target": "auto"
+   },
+   "Set Prompt From Button": {
+    "prompt_text": "~Claude"
+   }
+  }
+ },
+ {
+  "name": "кнопка: переоформити під ChatGPT",
+  "update": {
+   "update_id": 52,
+   "callback_query": {
+    "id": "cb1",
+    "data": "act:to_chatgpt",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Set Prompt From Button",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "target_override": "chatgpt"
+   },
+   "Set Prompt From Button": {
+    "prompt_text": "~ChatGPT"
+   }
+  }
+ },
+ {
+  "name": "нова людина без вибору моделі: спершу питаємо під яку модель",
+  "update": {
+   "update_id": 53,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "пост про каву"
+   }
+  },
+  "expect": [
+   "Has Prompt Text?",
+   "Target Chosen?",
+   "Save Pending Prompt",
+   "Ask Target Model",
+   "Is User Request?",
+   "Save Request History"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)",
+   "Generate Image (Gemini)",
+   "Send Prompt With Buttons"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": ""
+   }
+  }
+ },
+ {
+  "name": "вибір моделі продовжує збережений запит",
+  "update": {
+   "update_id": 54,
+   "callback_query": {
+    "id": "cb1",
+    "data": "target:claude",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Confirm Setting Change",
+   "Has Pending Prompt?",
+   "Show Typing",
+   "Set Prompt From Pending",
+   "Has Prompt Text?",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Ask Target Model"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "",
+    "pending_prompt": "пост про каву"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.target": "claude",
+    "p.pending_prompt": ""
+   },
+   "Set Prompt From Pending": {
+    "prompt_text": "пост про каву"
+   }
+  }
+ },
+ {
+  "name": "режим картинки не питає про модель",
+  "update": {
+   "update_id": 55,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "кіт-кіборг"
+   }
+  },
+  "expect": [
+   "Target Chosen?",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Ask Target Model"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\\n\\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "",
+    "mode": "image"
+   }
+  }
+ },
+ {
+  "name": "/stats для звичайного користувача мовчить",
+  "update": {
+   "update_id": 56,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "/stats"
+   }
+  },
+  "expect": [
+   "Is Admin User?"
+  ],
+  "not_expect": [
+   "Load Log Rows",
+   "Send Stats Report",
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  }
+ }
+]

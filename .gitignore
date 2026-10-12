@@ -1,0 +1,9 @@
+.env
+*.key
+*.pem
+.n8n-key.txt
+*-keys.txt
+*.bak
+Thumbs.db
+.DS_Store
+backup/
