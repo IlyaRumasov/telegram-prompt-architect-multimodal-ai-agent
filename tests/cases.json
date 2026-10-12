@@ -212,7 +212,8 @@
   },
   "stubs": {
    "Load User Prefs": {
-    "target": "auto"
+    "target": "auto",
+    "image": true
    }
   }
  },
@@ -499,7 +500,8 @@
     "_binary": "image_data"
    },
    "Load User Prefs": {
-    "target": "auto"
+    "target": "auto",
+    "image": true
    }
   },
   "values": {
@@ -994,7 +996,8 @@
     "_binary": "image_data"
    },
    "Load User Prefs": {
-    "target": "auto"
+    "target": "auto",
+    "image": true
    }
   },
   "values": {
@@ -1595,7 +1598,8 @@
     "error": "x"
    },
    "Load User Prefs": {
-    "target": "auto"
+    "target": "auto",
+    "image": true
    }
   }
  },
@@ -1850,7 +1854,8 @@
     "_binary": "image_data"
    },
    "Load User Prefs": {
-    "target": "auto"
+    "target": "auto",
+    "image": true
    }
   },
   "values": {
@@ -2089,6 +2094,160 @@
   "stubs": {
    "Load User Prefs": {
     "target": "auto"
+   }
+  }
+ },
+ {
+  "name": "картинка за замовчуванням вимкнена для нових",
+  "update": {
+   "update_id": 60,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Image Enabled?",
+   "Send Prompt With Buttons"
+  ],
+  "not_expect": [
+   "Generate Image (Gemini)"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\n\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.image": false
+   }
+  }
+ },
+ {
+  "name": "денний ліміт перевищено",
+  "update": {
+   "update_id": 61,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Apply Limits And Settings",
+   "Within Rate Limit?",
+   "Send Rate Limit Notice",
+   "Log Rate Limit Hit"
+  ],
+  "not_expect": [
+   "Route Update",
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "hits": 0,
+    "window_start": "$NOW",
+    "day_hits": 60,
+    "day_start": "$NOW",
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "limit_kind": "day"
+   }
+  }
+ },
+ {
+  "name": "після доби денний ліміт скидається",
+  "update": {
+   "update_id": 62,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Route Update",
+   "Generate Prompt (Agent)"
+  ],
+  "not_expect": [
+   "Send Rate Limit Notice"
+  ],
+  "stubs": {
+   "Generate Prompt (Agent)": {
+    "output": "```json\n{\"text_response\":\"PERSONA: експерт\n\nTASK: x\",\"image_prompt\":\"a cup of coffee, 4k\"}\n```"
+   },
+   "Load User Prefs": {
+    "day_hits": 60,
+    "day_start": 1000,
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "p.day_hits": 1
+   }
+  }
+ },
+ {
+  "name": "щогодинний ліміт має пріоритет над денним у повідомленні",
+  "update": {
+   "update_id": 63,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "запит"
+   }
+  },
+  "expect": [
+   "Send Rate Limit Notice"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "hits": 20,
+    "window_start": "$NOW",
+    "day_hits": 60,
+    "day_start": "$NOW",
+    "target": "auto"
+   }
+  },
+  "values": {
+   "Apply Limits And Settings": {
+    "limit_kind": "hour"
    }
   }
  }

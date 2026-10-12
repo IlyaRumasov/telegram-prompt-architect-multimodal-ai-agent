@@ -23,7 +23,7 @@
 - Кожен промт завершується блоком **QUALITY CHECK**: критерії, за якими цільова модель сама перевірить відповідь.
 - **Мова** (`/lang`): авто (мова запиту), українська, English, русский.
 - **Кнопки під відповіддю:** 🔄 переробити, ✂️ коротше, 📈 детальніше, 🎨 інша картинка, 🎯 під Claude / ChatGPT / Gemini, 👍/👎.
-- Картинка (`gemini-3.1-flash-image`) за замовчуванням увімкнена, озвучка (Gemini TTS `gemini-3.8-flash-tts`, голос Charon, надсилається файлом `.wav`) вимкнена: `/image` та `/audio` перемикають.
+- Картинка (`gemini-3.1-flash-image`) за замовчуванням вимкнена (витрати на генерацію), озвучка (Gemini TTS `gemini-3.8-flash-tts`, голос Charon, надсилається файлом `.wav`) теж вимкнена: `/image` та `/audio` перемикають.
 - Індикатор «друкує…» на час генерації, ліміт запитів, відсікання повторних апдейтів Telegram.
 - Оцінки під відповіддю (👍/👎) та анонімна статистика.
 - `/stats` для адміна: запити за годину, добу й тиждень, нові та активні користувачі, помилки та середній час відповіді, режими, мови, вхід (текст/голос/кнопки), оцінки, збої картинки й озвучки.
@@ -100,17 +100,17 @@ flowchart TD
 | `workflows/telegram-prompt-architect.json` | основний флоу |
 | `workflows/telegram-prompt-architect-error-alert.json` | Error Workflow: сповіщення адміну в Telegram |
 | `docs/` | скриншоти флоу та переписки з ботом |
-| `tests/run_tests.py`, `tests/cases.json` | автотести на заглушках (56 сценаріїв) |
+| `tests/run_tests.py`, `tests/cases.json` | автотести на заглушках (60 сценаріїв) |
 
 ## Як відновити
 
 1. Імпортуйте обидва JSON у n8n.
 2. Створіть креденшли: Telegram (токен від @BotFather) та Google Gemini (PaLM) API. У вузлах оберіть свої.
 3. Створіть три Data Table:
-   - **Налаштування:** `user_id` (number), `mode`, `lang`, `target`, `last_image_prompt`, `pending_prompt` (string), `image`, `audio`, `clarify` (boolean), `window_start`, `hits`, `last_update_id` (number). Вкажіть її у вузлах `Load Prefs`, `Save Prefs`, `Save Image Prompt` (замість `<PREFS_TABLE_ID>`).
+   - **Налаштування:** `user_id` (number), `mode`, `lang`, `target`, `last_image_prompt`, `pending_prompt` (string), `image`, `audio`, `clarify` (boolean), `window_start`, `hits`, `day_start`, `day_hits`, `last_update_id` (number). Вкажіть її у вузлах `Load Prefs`, `Save Prefs`, `Save Image Prompt` (замість `<PREFS_TABLE_ID>`).
    - **Лог (анонімний):** `user_id` (number), `event`, `mode`, `lang`, `source`, `result`, `button` (string), `length`, `duration_ms` (number), `is_new` (boolean). Вкажіть у вузлах `Log *`, `Get Log Rows`, `Forget Log` (замість `<LOG_TABLE_ID>`).
    - **Історія запитів:** `user_id` (number), `mode`, `lang`, `source`, `text` (string). Вкажіть у `Save History`, `Forget History` (замість `<HISTORY_TABLE_ID>`).
-4. У вузлі **Config** вкажіть `admin_chat_id` (ваш chat id) та `rate_limit_per_hour`. У флоу Error Alert замініть `<ADMIN_CHAT_ID>`.
+4. У вузлі **Config** вкажіть `admin_chat_id` (ваш chat id) , `rate_limit_per_hour` та `daily_limit`. У флоу Error Alert замініть `<ADMIN_CHAT_ID>`.
 5. У Settings основного флоу виберіть Error Workflow (`Telegram Prompt Architect: Error Alert`).
 6. Активуйте флоу.
 
@@ -120,7 +120,7 @@ flowchart TD
 - Особисті значення замінено заглушками: `<ADMIN_CHAT_ID>`, `<PREFS_TABLE_ID>`, `<LOG_TABLE_ID>`, `<HISTORY_TABLE_ID>`.
 - Лог анонімний: id, тип події, режим, мова, результат, час відповіді, без імен і текстів. Тексти запитів зберігаються окремо в таблиці History (без імені); користувачам про це повідомляє `/start` та `/help`, а `/forget` видаляє їхні дані з усіх таблиць.
 - Вхід агента обмежено 2000 символами, відповідь `maxTokens` 4000; у системному промті є захист від prompt injection.
-- Ліміт запитів на користувача (за замовчуванням 20 на годину), `/stats` доступна лише адміну.
+- Ліміт запитів на користувача (за замовчуванням 20 на годину і 60 на добу; змінюються у вузлі Config: `rate_limit_per_hour`, `daily_limit`), `/stats` доступна лише адміну.
 - Текст від LLM екранується для HTML і ділиться на частини до 3500 символів (ліміт Telegram 4096).
 
 ## Якість промту: A/B на реальному Gemini
@@ -155,7 +155,7 @@ flowchart TD
 
 ## Тестування
 
-`tests/run_tests.py` збирає тестову копію флоу: всі зовнішні вузли (Telegram, Gemini, Data Table, агент) замінюються заглушками, Telegram Trigger стає Webhook. Копія імпортується в n8n, отримує 56 тестових апдейтів і перевіряє, які вузли відпрацювали та які значення видали. Наприкінці копія видаляється. Реальні сервіси не викликаються.
+`tests/run_tests.py` збирає тестову копію флоу: всі зовнішні вузли (Telegram, Gemini, Data Table, агент) замінюються заглушками, Telegram Trigger стає Webhook. Копія імпортується в n8n, отримує 60 тестових апдейтів і перевіряє, які вузли відпрацювали та які значення видали. Наприкінці копія видаляється. Реальні сервіси не викликаються.
 
 ```bash
 python tests/run_tests.py --url https://<ваш-n8n> --key-file .n8n-key.txt

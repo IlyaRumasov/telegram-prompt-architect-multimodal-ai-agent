@@ -40,6 +40,12 @@
               "name": "rate_limit_per_hour",
               "value": 20,
               "type": "number"
+            },
+            {
+              "id": "b7c1d3a2-5e44-4f0a-9d6e-2a1f8c3b7e10",
+              "name": "daily_limit",
+              "value": 60,
+              "type": "number"
             }
           ]
         },
@@ -57,7 +63,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Єдиний формат вхідних даних для message та callback_query\nconst u = $input.first().json;\nconst m = u.message || {};\nconst cq = u.callback_query || null;\nconst from = m.from || (cq && cq.from) || {};\nreturn [{ json: {\n  update_id: u.update_id || 0,\n  kind: cq ? 'callback' : 'message',\n  chat_id: m.chat?.id ?? cq?.message?.chat?.id,\n  user_id: from.id,\n  first_name: from.first_name || '',\n  username: from.username || '',\n  text: (m.text || '').trim(),\n  callback_data: cq?.data || '',\n  callback_id: cq?.id || '',\n  has_voice: !!m.voice,\n  voice_file_id: m.voice?.file_id || '',\n  is_admin: String(from.id) === String(u.admin_chat_id),\n  admin_chat_id: u.admin_chat_id,\n  rate_limit_per_hour: u.rate_limit_per_hour\n} }];"
+        "jsCode": "// Єдиний формат вхідних даних для message та callback_query\nconst u = $input.first().json;\nconst m = u.message || {};\nconst cq = u.callback_query || null;\nconst from = m.from || (cq && cq.from) || {};\nreturn [{ json: {\n  update_id: u.update_id || 0,\n  kind: cq ? 'callback' : 'message',\n  chat_id: m.chat?.id ?? cq?.message?.chat?.id,\n  user_id: from.id,\n  first_name: from.first_name || '',\n  username: from.username || '',\n  text: (m.text || '').trim(),\n  callback_data: cq?.data || '',\n  callback_id: cq?.id || '',\n  has_voice: !!m.voice,\n  voice_file_id: m.voice?.file_id || '',\n  is_admin: String(from.id) === String(u.admin_chat_id),\n  admin_chat_id: u.admin_chat_id,\n  rate_limit_per_hour: u.rate_limit_per_hour,\n    daily_limit: u.daily_limit\n} }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -102,7 +108,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Налаштування користувача (Data Table), дедуплікація, ліміт запитів і зміни /image /audio, кнопки режиму та мови\nconst j = $('Normalize Update').first().json;\nconst row = $input.first().json || {};\nconst now = Date.now();\nconst MODES = { text: '💬 Текст', image: '🎨 Картинка', code: '💻 Код', email: '✉️ Лист' };\nconst LANGS = { auto: '🌐 Авто', uk: '🇺🇦 Українська', en: '🇬🇧 English', ru: 'Русский' };\nconst TARGETS = { auto: '🤖 Авто', chatgpt: 'ChatGPT', claude: 'Claude', gemini: 'Gemini' };\nconst isNew = !row.user_id;\nconst source = j.kind === 'callback' ? 'button' : (j.has_voice ? 'voice' : 'text');\nconst p = {\n  mode: MODES[row.mode] ? row.mode : 'text',\n  lang: LANGS[row.lang] ? row.lang : 'auto',\n  target: TARGETS[row.target] ? row.target : '',\n  pending_prompt: String(row.pending_prompt || ''),\n  clarify: row.clarify === true || row.clarify === 'true',\n  image: (row.image === undefined || row.image === null || row.image === '') ? true : (row.image === true || row.image === 'true'),\n  audio: row.audio === true || row.audio === 'true',\n  last_image_prompt: row.last_image_prompt || '',\n  window_start: Number(row.window_start) || now,\n  hits: Number(row.hits) || 0,\n  last_update_id: Number(row.last_update_id) || 0\n};\n// Telegram повторно надсилає апдейт при таймауті: ігноруємо вже оброблені update_id\nconst dup = !!(j.update_id && p.last_update_id && j.update_id <= p.last_update_id);\nif (now - p.window_start > 3600000) { p.window_start = now; p.hits = 0; }\nconst isAction = j.kind === 'callback' && /^act:/.test(j.callback_data);\nconst isPrompt = isAction || (j.kind === 'message' && (j.has_voice || (j.text && !j.text.startsWith('/') && !/^(ілля|илья)/i.test(j.text))));\nconst limit = Number(j.rate_limit_per_hour) || 20;\nlet allowed = true;\nlet reply = '';\nlet resumePrompt = '';\nif (!dup) {\n  if (isPrompt) { allowed = p.hits < limit; if (allowed) p.hits++; }\n  const cmd = j.text.startsWith('/') ? ((j.text.match(/^\\/(\\w+)/) || [])[1] || '').toLowerCase() : '';\n  if (cmd === 'image') {\n    p.image = !p.image;\n    reply = `${p.image ? '✅' : '🚫'} Картинки: ${p.image ? 'увімкнено' : 'вимкнено'}. Змінити: /image`;\n  } else if (cmd === 'clarify') {\n    p.clarify = !p.clarify;\n    reply = `${p.clarify ? '✅' : '🚫'} Уточнення: ${p.clarify ? 'увімкнено (бот спершу поставить 1–3 питання, якщо запит розмитий)' : 'вимкнено (промт одразу)'}. Змінити: /clarify`;\n  } else if (cmd === 'audio') {\n    p.audio = !p.audio;\n    reply = `${p.audio ? '✅' : '🚫'} Аудіо: ${p.audio ? 'увімкнено' : 'вимкнено'}. Змінити: /audio`;\n  } else if (j.kind === 'callback' && j.callback_data.startsWith('mode:')) {\n    const v = j.callback_data.slice(5);\n    if (MODES[v]) { p.mode = v; reply = `✅ Режим: ${MODES[v]}`; }\n  } else if (j.kind === 'callback' && j.callback_data.startsWith('target:')) {\n    const v = j.callback_data.slice(7);\n    if (TARGETS[v]) {\n      p.target = v; reply = `✅ Промт готуємо під: ${TARGETS[v]}`;\n      if (p.pending_prompt) { resumePrompt = p.pending_prompt; p.pending_prompt = ''; }\n    }\n  } else if (j.kind === 'callback' && j.callback_data.startsWith('lang:')) {\n    const v = j.callback_data.slice(5);\n    if (LANGS[v]) { p.lang = v; reply = `✅ Мова: ${LANGS[v]}`; }\n  }\n}\nif (j.update_id) p.last_update_id = Math.max(p.last_update_id, j.update_id);\nconst ACTIONS = {\n  'act:redo': 'Перероби свій попередній промт: запропонуй інший підхід, збережи тему та формат JSON.',\n  'act:short': 'Зроби свій попередній промт коротшим і лаконічнішим, збережи суть та формат JSON.',\n  'act:long': 'Зроби свій попередній промт детальнішим: додай контекст, обмеження та приклади, збережи формат JSON.'\n};\nconst rt = /^act:to_([a-z]+)$/.exec(j.callback_data || '');\nconst retarget = rt && TARGETS[rt[1]] && rt[1] !== 'auto' ? rt[1] : '';\nconst retargetPrompt = retarget ? `Переоформи свій попередній промт під цільову модель ${TARGETS[retarget]}: збережи зміст, зміни лише структуру та оформлення; формат JSON той самий.` : '';\nreturn [{ json: { ...j, p, mode: p.mode, lang: p.lang, target: p.target || 'auto', target_set: !!p.target, clarify: p.clarify, resume_prompt: resumePrompt, want_image: p.image, want_audio: p.audio,\n  last_image_prompt: p.last_image_prompt, dup, allowed, reply, prompt_override: ACTIONS[j.callback_data] || retargetPrompt, target_override: retarget,\n  is_new: isNew, started_at: now, source } }];"
+        "jsCode": "// Налаштування користувача (Data Table), дедуплікація, ліміт запитів і зміни /image /audio, кнопки режиму та мови\nconst j = $('Normalize Update').first().json;\nconst row = $input.first().json || {};\nconst now = Date.now();\nconst MODES = { text: '💬 Текст', image: '🎨 Картинка', code: '💻 Код', email: '✉️ Лист' };\nconst LANGS = { auto: '🌐 Авто', uk: '🇺🇦 Українська', en: '🇬🇧 English', ru: 'Русский' };\nconst TARGETS = { auto: '🤖 Авто', chatgpt: 'ChatGPT', claude: 'Claude', gemini: 'Gemini' };\nconst isNew = !row.user_id;\nconst source = j.kind === 'callback' ? 'button' : (j.has_voice ? 'voice' : 'text');\nconst p = {\n  mode: MODES[row.mode] ? row.mode : 'text',\n  lang: LANGS[row.lang] ? row.lang : 'auto',\n  target: TARGETS[row.target] ? row.target : '',\n  pending_prompt: String(row.pending_prompt || ''),\n  clarify: row.clarify === true || row.clarify === 'true',\n  image: (row.image === undefined || row.image === null || row.image === '') ? false : (row.image === true || row.image === 'true'),\n  audio: row.audio === true || row.audio === 'true',\n  last_image_prompt: row.last_image_prompt || '',\n  window_start: Number(row.window_start) || now,\n  hits: Number(row.hits) || 0,\n  day_start: Number(row.day_start) || now,\n  day_hits: Number(row.day_hits) || 0,\n  last_update_id: Number(row.last_update_id) || 0\n};\n// Telegram повторно надсилає апдейт при таймауті: ігноруємо вже оброблені update_id\nconst dup = !!(j.update_id && p.last_update_id && j.update_id <= p.last_update_id);\nif (now - p.window_start > 3600000) { p.window_start = now; p.hits = 0; }\nif (now - p.day_start > 86400000) { p.day_start = now; p.day_hits = 0; }\nconst isAction = j.kind === 'callback' && /^act:/.test(j.callback_data);\nconst isPrompt = isAction || (j.kind === 'message' && (j.has_voice || (j.text && !j.text.startsWith('/') && !/^(ілля|илья)/i.test(j.text))));\nconst limit = Number(j.rate_limit_per_hour) || 20;\nconst dayLimit = Number(j.daily_limit) || 60;\nlet limitKind = '';\nlet allowed = true;\nlet reply = '';\nlet resumePrompt = '';\nif (!dup) {\n  if (isPrompt) {\n    if (p.hits >= limit) { allowed = false; limitKind = 'hour'; }\n    else if (p.day_hits >= dayLimit) { allowed = false; limitKind = 'day'; }\n    else { p.hits++; p.day_hits++; }\n  }\n  const cmd = j.text.startsWith('/') ? ((j.text.match(/^\\/(\\w+)/) || [])[1] || '').toLowerCase() : '';\n  if (cmd === 'image') {\n    p.image = !p.image;\n    reply = `${p.image ? '✅' : '🚫'} Картинки: ${p.image ? 'увімкнено' : 'вимкнено'}. Змінити: /image`;\n  } else if (cmd === 'clarify') {\n    p.clarify = !p.clarify;\n    reply = `${p.clarify ? '✅' : '🚫'} Уточнення: ${p.clarify ? 'увімкнено (бот спершу поставить 1–3 питання, якщо запит розмитий)' : 'вимкнено (промт одразу)'}. Змінити: /clarify`;\n  } else if (cmd === 'audio') {\n    p.audio = !p.audio;\n    reply = `${p.audio ? '✅' : '🚫'} Аудіо: ${p.audio ? 'увімкнено' : 'вимкнено'}. Змінити: /audio`;\n  } else if (j.kind === 'callback' && j.callback_data.startsWith('mode:')) {\n    const v = j.callback_data.slice(5);\n    if (MODES[v]) { p.mode = v; reply = `✅ Режим: ${MODES[v]}`; }\n  } else if (j.kind === 'callback' && j.callback_data.startsWith('target:')) {\n    const v = j.callback_data.slice(7);\n    if (TARGETS[v]) {\n      p.target = v; reply = `✅ Промт готуємо під: ${TARGETS[v]}`;\n      if (p.pending_prompt) { resumePrompt = p.pending_prompt; p.pending_prompt = ''; }\n    }\n  } else if (j.kind === 'callback' && j.callback_data.startsWith('lang:')) {\n    const v = j.callback_data.slice(5);\n    if (LANGS[v]) { p.lang = v; reply = `✅ Мова: ${LANGS[v]}`; }\n  }\n}\nif (j.update_id) p.last_update_id = Math.max(p.last_update_id, j.update_id);\nconst ACTIONS = {\n  'act:redo': 'Перероби свій попередній промт: запропонуй інший підхід, збережи тему та формат JSON.',\n  'act:short': 'Зроби свій попередній промт коротшим і лаконічнішим, збережи суть та формат JSON.',\n  'act:long': 'Зроби свій попередній промт детальнішим: додай контекст, обмеження та приклади, збережи формат JSON.'\n};\nconst rt = /^act:to_([a-z]+)$/.exec(j.callback_data || '');\nconst retarget = rt && TARGETS[rt[1]] && rt[1] !== 'auto' ? rt[1] : '';\nconst retargetPrompt = retarget ? `Переоформи свій попередній промт під цільову модель ${TARGETS[retarget]}: збережи зміст, зміни лише структуру та оформлення; формат JSON той самий.` : '';\nreturn [{ json: { ...j, p, mode: p.mode, lang: p.lang, target: p.target || 'auto', target_set: !!p.target, clarify: p.clarify, resume_prompt: resumePrompt, want_image: p.image, want_audio: p.audio,\n  last_image_prompt: p.last_image_prompt, dup, allowed, limit_kind: limitKind, reply, prompt_override: ACTIONS[j.callback_data] || retargetPrompt, target_override: retarget,\n  is_new: isNew, started_at: now, source } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -179,7 +185,9 @@
             "pending_prompt": "={{ $json.p.pending_prompt }}",
             "window_start": "={{ $json.p.window_start }}",
             "hits": "={{ $json.p.hits }}",
-            "last_update_id": "={{ $json.p.last_update_id }}"
+            "last_update_id": "={{ $json.p.last_update_id }}",
+            "day_start": "={{ $json.p.day_start }}",
+            "day_hits": "={{ $json.p.day_hits }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -292,6 +300,26 @@
               "type": "number",
               "readOnly": false,
               "removed": false
+            },
+            {
+              "id": "day_start",
+              "displayName": "day_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "day_hits",
+              "displayName": "day_hits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -346,7 +374,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chat_id }}",
-        "text": "⏳ Забагато запитів за годину. Спробуй трохи пізніше.",
+        "text": "={{ $json.limit_kind === 'day' ? '⏳ Денний ліміт запитів вичерпано. Повертайся завтра.' : '⏳ Забагато запитів за годину. Спробуй трохи пізніше.' }}",
         "additionalFields": {
           "appendAttribution": false
         }
