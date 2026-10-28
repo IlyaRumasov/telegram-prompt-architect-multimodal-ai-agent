@@ -2250,5 +2250,286 @@
     "limit_kind": "hour"
    }
   }
+ },
+ {
+  "name": "режим Skill: кнопка в /mode",
+  "update": {
+   "update_id": 201,
+   "callback_query": {
+    "id": "cb1",
+    "data": "mode:skill",
+    "from": {
+     "id": 7,
+     "first_name": "Test"
+    },
+    "message": {
+     "chat": {
+      "id": 5
+     }
+    }
+   }
+  },
+  "expect": [
+   "Acknowledge Button",
+   "Confirm Setting Change"
+  ],
+  "not_expect": [
+   "Generate Prompt (Agent)"
+  ],
+  "values": {
+   "Apply Limits And Settings": {
+    "p.mode": "skill",
+    "reply": "~Skill"
+   }
+  }
+ },
+ {
+  "name": "Skill: валідний SKILL.md надсилається файлом, без запитання про модель, картинки й аудіо",
+  "update": {
+   "update_id": 202,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл для перевірки pull request у Python"
+   }
+  },
+  "expect": [
+   "Target Chosen?",
+   "Generate Prompt (Agent)",
+   "Parse Agent Output",
+   "Is Skill Mode?",
+   "Convert Skill To File",
+   "Send Skill File",
+   "Send Prompt With Buttons"
+  ],
+  "not_expect": [
+   "Ask Target Model",
+   "Generate Image (Gemini)",
+   "Generate Speech (Gemini TTS)",
+   "Save Image Description"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"skill_name\": \"python-pr-review\", \"text_response\": \"---\\nname: python-pr-review\\ndescription: Перевіряє pull request із Python-кодом. Використовуй, коли користувач просить код-рев'ю або перегляд diff.\\n---\\n\\n# Перевірка PR\\n\\n## Кроки\\n1. Прочитай зміни.\", \"image_prompt\": \"\"}"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_skill": true,
+    "skill_name": "python-pr-review",
+    "skill_warnings": []
+   },
+   "Split And Escape Text": {
+    "html": "~Ось твій SKILL.md"
+   }
+  }
+ },
+ {
+  "name": "Skill: некоректне ім'я та відсутній опис «коли» дають попередження, файл усе одно надсилається",
+  "update": {
+   "update_id": 203,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл для звітів"
+   }
+  },
+  "expect": [
+   "Is Skill Mode?",
+   "Convert Skill To File",
+   "Send Skill File"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"skill_name\": \"Weekly_Report\", \"text_response\": \"---\\nname: Weekly_Report\\ndescription: Робить звіти.\\n---\\n\\n# Звіт\", \"image_prompt\": \"\"}"
+   }
+  },
+  "values": {
+   "Split And Escape Text": {
+    "html": "~Перевір перед використанням"
+   },
+   "Parse Agent Output": {
+    "is_skill": true
+   }
+  }
+ },
+ {
+  "name": "Skill: без frontmatter є попередження",
+  "update": {
+   "update_id": 204,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл"
+   }
+  },
+  "expect": [
+   "Send Skill File"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"skill_name\": \"x\", \"text_response\": \"# просто текст без блоку\", \"image_prompt\": \"\"}"
+   }
+  },
+  "values": {
+   "Split And Escape Text": {
+    "html": "~немає блоку frontmatter"
+   }
+  }
+ },
+ {
+  "name": "Skill: description у YAML-блоці > розпізнається",
+  "update": {
+   "update_id": 205,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл"
+   }
+  },
+  "expect": [
+   "Send Skill File"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"skill_name\": \"folded-skill\", \"text_response\": \"---\\nname: folded-skill\\ndescription: >\\n  Робить щось корисне.\\n  Використовуй, коли користувач просить про це.\\n---\\n\\n# Тіло\", \"image_prompt\": \"\"}"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "skill_warnings": []
+   }
+  }
+ },
+ {
+  "name": "Skill + /clarify: питання замість файлу",
+  "update": {
+   "update_id": 206,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл для звітів"
+   }
+  },
+  "expect": [
+   "Parse Agent Output",
+   "Send Text Chunk"
+  ],
+  "not_expect": [
+   "Convert Skill To File",
+   "Send Skill File"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "clarify": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"questions\": [\"Які дані на вході?\", \"Який формат результату?\"]}"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_questions": true,
+    "is_skill": false
+   }
+  }
+ },
+ {
+  "name": "Звичайний режим не надсилає файл Skill",
+  "update": {
+   "update_id": 207,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "пост про каву"
+   }
+  },
+  "expect": [
+   "Is Skill Mode?",
+   "Send Prompt With Buttons"
+  ],
+  "not_expect": [
+   "Convert Skill To File",
+   "Send Skill File"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "text",
+    "target": "auto"
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"text_response\": \"PERSONA: x\", \"image_prompt\": \"cat\"}"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_skill": false
+   }
+  }
  }
 ]
