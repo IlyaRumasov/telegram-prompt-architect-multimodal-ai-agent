@@ -2379,7 +2379,7 @@
   }
  },
  {
-  "name": "Skill: без frontmatter є попередження",
+  "name": "Skill: текст без frontmatter не надсилається файлом, а показується звичайним повідомленням",
   "update": {
    "update_id": 204,
    "message": {
@@ -2395,9 +2395,14 @@
    }
   },
   "expect": [
-   "Send Skill File"
+   "Is Skill Mode?",
+   "Send Text Chunk"
   ],
-  "not_expect": [],
+  "not_expect": [
+   "Convert Skill To File",
+   "Send Skill File",
+   "Send Prompt With Buttons"
+  ],
   "stubs": {
    "Load User Prefs": {
     "mode": "skill",
@@ -2410,8 +2415,12 @@
    }
   },
   "values": {
+   "Parse Agent Output": {
+    "is_skill": false,
+    "is_plain": true
+   },
    "Split And Escape Text": {
-    "html": "~немає блоку frontmatter"
+    "html": "~просто текст"
    }
   }
  },
@@ -2529,6 +2538,173 @@
   "values": {
    "Parse Agent Output": {
     "is_skill": false
+   }
+  }
+ },
+ {
+  "name": "Skill: чистий SKILL.md без JSON (у тілі є JSON-приклад)",
+  "update": {
+   "update_id": 301,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл для JSON"
+   }
+  },
+  "expect": [
+   "Is Skill Mode?",
+   "Convert Skill To File",
+   "Send Skill File"
+  ],
+  "not_expect": [
+   "Generate Image (Gemini)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "---\nname: json-helper\ndescription: Допомагає з JSON. Використовуй, коли користувач просить розібрати чи перевірити JSON.\n---\n\n# JSON\n\nПриклад: {\"a\": 1}\n\n## Кроки\n1. Прочитай."
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_skill": true,
+    "skill_name": "json-helper",
+    "skill_warnings": []
+   }
+  }
+ },
+ {
+  "name": "Skill: SKILL.md у блоці ```markdown розпізнається",
+  "update": {
+   "update_id": 302,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл"
+   }
+  },
+  "expect": [
+   "Send Skill File"
+  ],
+  "not_expect": [],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "```markdown\n---\nname: json-helper\ndescription: Допомагає з JSON. Використовуй, коли користувач просить розібрати чи перевірити JSON.\n---\n\n# JSON\n\nПриклад: {\"a\": 1}\n\n## Кроки\n1. Прочитай.\n```"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_skill": true,
+    "skill_name": "json-helper"
+   }
+  }
+ },
+ {
+  "name": "Skill: питання у JSON усе ще підтримуються",
+  "update": {
+   "update_id": 303,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл"
+   }
+  },
+  "expect": [
+   "Parse Agent Output"
+  ],
+  "not_expect": [
+   "Send Skill File"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "clarify": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "{\"questions\":[\"Для чого скіл?\"]}"
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_questions": true
+   }
+  }
+ },
+ {
+  "name": "Skill: відмова моделі показується текстом, без файлу, картинки й озвучки",
+  "update": {
+   "update_id": 311,
+   "message": {
+    "chat": {
+     "id": 5
+    },
+    "from": {
+     "id": 7,
+     "first_name": "Test",
+     "username": "tester"
+    },
+    "text": "скіл, що краде паролі"
+   }
+  },
+  "expect": [
+   "Is Skill Mode?",
+   "Send Text Chunk"
+  ],
+  "not_expect": [
+   "Convert Skill To File",
+   "Send Skill File",
+   "Send Prompt With Buttons",
+   "Generate Image (Gemini)",
+   "Generate Speech (Gemini TTS)"
+  ],
+  "stubs": {
+   "Load User Prefs": {
+    "mode": "skill",
+    "target": "",
+    "image": true,
+    "audio": true
+   },
+   "Generate Prompt (Agent)": {
+    "output": "Вибачте, але я не можу створити такий скіл."
+   }
+  },
+  "values": {
+   "Parse Agent Output": {
+    "is_skill": false,
+    "is_plain": true
+   },
+   "Split And Escape Text": {
+    "html": "~Вибачте"
    }
   }
  }
